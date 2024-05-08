@@ -172,4 +172,4 @@ registerGeoLocate(map)
 
      mapInstance.on('click', onMapClick);
  }
- registerPopUpForInsert(map) 
+ registerPopUpForInsert(map)
