@@ -94,7 +94,7 @@ registerGeoLocate(map)
      // Settings - These need to agree with the definition of the WFS layer in Geoserver
      var namespace_prefix = "geo1007";
      var namespace_uri = "http://all.kinds.of.data";
-     var server_url = "http://localhost:8080"
+     var server_url = "https://varioscale.bk.tudelft.nl"
      var layer_name = "pois"
      var geom_column_name = "geom"
      // End Settings
@@ -144,3 +144,32 @@ registerGeoLocate(map)
      return performInsert; // return function reference to be able to insert data
  }
  let insertWFS = registerWFSReadAndWriteLayer(map, toc)
+ 
+ function registerPopUpForInsert(mapInstance) {
+     var popup = L.popup();
+
+     function onMapClick(e) {
+         var lng = e.latlng.lng;
+         var lat = e.latlng.lat;
+
+         var js_function = ''
+         + ' var poi_name = document.getElementById(\'poi_name\').value ; '
+         + ' var reported_by = document.getElementById(\'reported_by\').value ; '
+         + ' insertWFS(' + lng + ',' + lat + ', poi_name, reported_by) ; ';
+
+         var popupContent = ''
+         + '<label for="poi_name">Point of Interest: </label><br>'
+         + '<input type="text" id="poi_name" name="poi_name" value=""><br>'
+         + '<label for="reported_by" >Reported by: </label><br>'
+         + '<input type="text" id="reported_by" name="reported_by" value=""><br>'
+         + '<button type="button" onclick="' + js_function + '">Insert point</button>';
+
+         popup
+         .setLatLng(e.latlng)
+         .setContent(popupContent)
+         .openOn(mapInstance);
+     }
+
+     mapInstance.on('click', onMapClick);
+ }
+ registerPopUpForInsert(map) 
